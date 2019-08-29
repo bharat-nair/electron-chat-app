@@ -6,21 +6,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>App</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
-
 </head>
 
 <body>
-    <div class="container p-5">
-        <button type="submit" class="btn btn-primary" onclick="connectUser()">Connect</button>
-    </div>
+    <textarea></textarea>
+    <form onsubmit="sendMessage()">
+        <input type="text" id="message">
+        <button type="submit">Send</button>
+    </form>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
+
+        function sendMessage() {
+            socket.emit('chat_message', {
+                message: document.getElementById('message').value
+            })
+        }
+    </script>
 </body>
 
 </html>
-
-<script>
-    function connectUser() {
-        var socket = io.connect('http://localhost:80');
-    }
-</script>

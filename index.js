@@ -1,33 +1,24 @@
-const electron = require('electron');
-const app = require('express')();
-const server = require('http').Server(app)
-const io = require('socket.io')(server);
-
-server.listen(80);
+var app = require('express')();
+var http = require('http').createServer(app);
+var io = require('socket.io')(http);
 
 app.get('/', (request, response) => {
-    response.sendFile(__dirname + "/index.html")
-})
-
-app.get('/chat', (request, response) => {
-    response.sendFile(__dirname + "/test.html")
-})
-
-app.listen(80)
-
-function createWindow() {
-    let window = new electron.BrowserWindow({
-        width: 800,
-        height: 600,
-        webPreferences: {
-            nodeIntegration: true
-        }
-    });
-    window.loadURL('http://localhost:80')
-}
+    response.sendFile(__dirname + '/index.html');
+});
 
 io.on('connection', (socket) => {
-    console.log("New user connected!")
+    console.log('New connection!');
+
+    socket.on('disconnect', () => {
+        console.log('User disconnected.')
+    })
+
+    socket.on('chat_message', (msg) => {
+        console.log('message:', msg.message)
+    })
 })
 
-electron.app.on('ready', createWindow)
+
+http.listen(3000, () => {
+    console.log(`Listening on port 3000`);
+})
