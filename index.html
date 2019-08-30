@@ -5,24 +5,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>App</title>
+    <title>Chat</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 
 <body>
-    <textarea></textarea>
-    <form onsubmit="sendMessage()">
-        <input type="text" id="message">
-        <button type="submit">Send</button>
-    </form>
+    <div class="container p-2">
+        <div>
+            <h5>Enter a username:</h5>
+            <input type="text" name="username" id="username">
+            <button onclick="setUsername()">Choose</button>
+        </div>
+        <div>
+            <textarea id="chatbox" rows="20" cols="100" placeholder="No messages yet..."></textarea>
+        </div>
+
+        <div>
+            <input type="text" id="message" placeholder="Start typing!">
+            <button type="button" onclick="sendMessage()" class="btn btn-primary">Send</button>
+        </div>
+    </div>
     <script src="/socket.io/socket.io.js"></script>
     <script>
         var socket = io();
+        let user_name = 'anonymous'
 
         function sendMessage() {
             socket.emit('chat_message', {
                 message: document.getElementById('message').value
-            })
+            });
+
+
         }
+        socket.on('chat_message', (msg) => {
+
+            document.getElementById('chatbox').append(user_name + ": " + msg.message + '\n')
+        })
+
+        function setUsername() {
+            socket.emit('set_username', {
+                username: document.getElementById('username').value
+            })
+
+        }
+        socket.on('set_username', (user) => {
+            user_name = user.username
+        })
     </script>
 </body>
 

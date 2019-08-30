@@ -14,8 +14,16 @@ io.on('connection', (socket) => {
     })
 
     socket.on('chat_message', (msg) => {
-        console.log('message:', msg.message)
+        console.log(msg.message)
+        io.emit('chat_message', msg);
     })
+
+    socket.on('set_username', (user) => {
+        console.log(user)
+        io.emit('set_username', user)
+    })
+
+
 })
 
 
